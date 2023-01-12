@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  forticlient:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - VPN_ADDR=<vpn-gateway:port>
+      - VPN_USER=<your_login>
+      - VPN_PASS=<your_pass>
+      - VPN_CERT_PASS=<your_cert_pass>
+    image: docker-forticlient
+    privileged: true
+    networks:
+      fortinet:
+        ipv4_address: 192.168.92.2
+    command: ["/bin/bash", "start.sh"]
+    volumes:
+      - ./cert:/forti/cert
+
+networks:
+  fortinet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.92.0/24
+          gateway: 192.168.92.1
